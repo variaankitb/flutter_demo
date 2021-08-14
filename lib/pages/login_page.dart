@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/utils/flutter_demo_routes.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  String _name = "";
+  bool _changeButton = false;
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -17,7 +25,7 @@ class LoginPage extends StatelessWidget {
               height: 20,
             ),
             Text(
-              "Welcome",
+              "Welcome $_name",
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -33,9 +41,11 @@ class LoginPage extends StatelessWidget {
                 children: [
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: "Enter User Name",
-                      labelText: "UserName",
-                    ),
+                        hintText: "Enter User Name", labelText: "UserName"),
+                    onChanged: (value) {
+                      _name = value;
+                      setState(() {});
+                    },
                   ),
                   TextFormField(
                     obscureText: true,
@@ -47,13 +57,41 @@ class LoginPage extends StatelessWidget {
                   SizedBox(
                     height: 40,
                   ),
-                  ElevatedButton(
-                    onPressed: () {
+                  InkWell(
+                    onTap: () async {
+                      setState(() {
+                        _changeButton = true;
+                      });
+                      await Future.delayed(Duration(seconds: 1));
                       Navigator.pushNamed(context, FlutterDemoRoutes.homeRoute);
                     },
-                    style: TextButton.styleFrom(minimumSize: Size(150, 50)),
-                    child: Text("Login"),
+                    child: AnimatedContainer(
+                      duration: Duration(seconds: 1),
+                      width: _changeButton ? 50 : 150,
+                      height: 50,
+                      alignment: Alignment.center,
+                      child: _changeButton ? Icon(
+                        Icons.done,
+                        color: Colors.white,
+                      ) : Text(
+                        "Login",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18),
+                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.deepPurple,
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
                   )
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     Navigator.pushNamed(context, FlutterDemoRoutes.homeRoute);
+                  //   },
+                  //   style: TextButton.styleFrom(minimumSize: Size(150, 50)),
+                  //   child: Text("Login"),
+                  // )
                 ],
               ),
             ),
